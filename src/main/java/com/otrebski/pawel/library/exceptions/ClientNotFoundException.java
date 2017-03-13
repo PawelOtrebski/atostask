@@ -11,7 +11,29 @@ package com.otrebski.pawel.library.exceptions;
  */
 public class ClientNotFoundException extends Exception{
    
+    private String message;
     public ClientNotFoundException(String message){
-        super(message);
+        super();
+        String format = "Client with name: %s not found";
+        this.message = String.format(format,message);
+    }
+    
+    public ClientNotFoundException(Long id){
+        super();
+        String format = "Client with id: %d not found";
+        this.message = String.format(format,id);
+    }
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
     }
 }
