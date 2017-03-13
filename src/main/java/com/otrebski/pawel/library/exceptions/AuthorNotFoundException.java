@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.otrebski.pawel.library.exceptions;
 
 /**
@@ -10,10 +6,26 @@ package com.otrebski.pawel.library.exceptions;
  * @author pawel
  */
 public class AuthorNotFoundException extends Exception{
-   
+    
+    private String message;
     public AuthorNotFoundException(String message){
-        super(message);
-        
+        super();
+        String format = "Author: %s does not exist";
+        this.message = String.format(format, message);
+    }
+
+    /**
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @param message the message to set
+     */
+    public void setMessage(String message) {
+        this.message = message;
     }
     
 }
