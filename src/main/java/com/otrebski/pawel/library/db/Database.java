@@ -50,6 +50,17 @@ public class Database {
     }
     
     /*
+        Hack off template for Singleton in Netbeans
+    */
+    public static Database getInstance(){
+        return DatabaseHolder.INSTANCE;
+    }
+    
+    private static class DatabaseHolder{
+        private static final Database INSTANCE = new Database();
+    }
+    
+    /*
         Add a new book to the collection of books. The author is found 
         or created and then added to the books author field.
     */
@@ -282,7 +293,6 @@ public class Database {
     }
     
     public static void main(String args[]){
-        Database db = new Database();
-        db.addNewBook("one", "pawel otrebski", 2001);
+        
     }
 }

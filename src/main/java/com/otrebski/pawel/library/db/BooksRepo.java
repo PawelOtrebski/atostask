@@ -4,9 +4,9 @@ package com.otrebski.pawel.library.db;
 import com.otrebski.pawel.library.entities.Author;
 import com.otrebski.pawel.library.entities.Book;
 import com.otrebski.pawel.library.enums.Status;
-import com.otrebski.pawel.library.exceptions.AuthorNotFoundException;
 import com.otrebski.pawel.library.exceptions.BookNotFoundException;
 import com.otrebski.pawel.library.exceptions.BookRentedOutException;
+import com.otrebski.pawel.library.interfaces.EntityInterface;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -110,7 +110,7 @@ public class BooksRepo {
         
         this.books.remove(book.getId());
         
-        System.out.println(bookId +" removed permanently");
+        
     }
     
     /*
@@ -188,5 +188,7 @@ public class BooksRepo {
     public static void main(String[]args){
         
     }
+
+   
     
 }
