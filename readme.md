@@ -12,7 +12,7 @@ be sufficient.
 ## Requirements
 1. Java1.8 - the project was written using java1.8.25
 2. Apache maven 3.3.9
-3.(optional) Use an IDE (I used netbeans), which simplifies the whole process
+3. (optional) Use an IDE (I used netbeans), which simplifies the whole process
 
 ## TODO
 1. Refactor some code, find patterns etc
