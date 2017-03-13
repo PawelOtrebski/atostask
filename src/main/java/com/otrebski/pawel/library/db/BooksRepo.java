@@ -88,7 +88,7 @@ public class BooksRepo {
     
     public void update(Long bookId, Book book) throws BookNotFoundException{
         
-        if(!books.containsKey(bookId)) throw new BookNotFoundException(bookId+ " not found");
+        if(!books.containsKey(bookId)) throw new BookNotFoundException(bookId);
         
         
         this.books.replace(bookId, book);
@@ -102,11 +102,11 @@ public class BooksRepo {
     */
     public void delete(Long bookId) throws BookNotFoundException,
             BookRentedOutException{
-        if(!this.books.containsKey(bookId)) throw new BookNotFoundException("Book not foud, id"+ bookId);
+        if(!this.books.containsKey(bookId)) throw new BookNotFoundException(bookId);
         
         Book book = this.books.get(bookId);
         
-        if(book.getCurrentStatus().equals(Status.OUT)) throw new BookRentedOutException("Book rented to: "+book.getClient());
+        if(book.getCurrentStatus().equals(Status.OUT)) throw new BookRentedOutException(book);
         
         this.books.remove(book.getId());
         
@@ -117,7 +117,7 @@ public class BooksRepo {
         Find book by id
     */
     public Book findById(Long id) throws BookNotFoundException{
-        if(!this.books.containsKey(id)) throw new BookNotFoundException("Book does not exist");
+        if(!this.books.containsKey(id)) throw new BookNotFoundException(id);
         
         return this.books.get(id);
     }
@@ -137,6 +137,8 @@ public class BooksRepo {
                 list.add(book);
             }
         }
+        
+        if(list.isEmpty()) throw new BookNotFoundException(name);
        
         return list;
     }
@@ -144,7 +146,7 @@ public class BooksRepo {
     /*
         find book by author
     */
-    public List<Book> findByAuthor(Author author) throws AuthorNotFoundException{
+    public List<Book> findByAuthor(Author author) throws BookNotFoundException{
         List<Book> list = new ArrayList<>();
         
         for(Book book : books.values()){
@@ -152,6 +154,8 @@ public class BooksRepo {
                 list.add(book);
             }
         }
+        
+        if(list.isEmpty()) throw new BookNotFoundException(author);
         
         return list;
     }

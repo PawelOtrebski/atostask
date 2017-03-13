@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package com.otrebski.pawel.library.db;
 
 import com.otrebski.pawel.library.entities.Author;
@@ -55,7 +51,7 @@ public class AuthorRepo {
         for(Author author : authors.values()){
             
             if(author.getName().equalsIgnoreCase(name)){
-                throw new AuthorExistsException(name+" exists, id:"+author.getId());
+                throw new AuthorExistsException(author);
             }
             
         }
@@ -112,9 +108,15 @@ public class AuthorRepo {
             }
         }
         
-        if(author == null) throw new AuthorNotFoundException("Author not found: "+name);
+        if(author == null) throw new AuthorNotFoundException(name);
         
         return author;
+    }
+    
+    public static void main(String[]args){
+       
+        
+       
     }
     
     

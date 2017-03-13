@@ -2,8 +2,7 @@
 package com.otrebski.pawel.library.main;
 
 
-import com.otrebski.pawel.library.entities.Book;
-import java.util.HashMap;
+import com.otrebski.pawel.library.exceptions.AuthorExistsException;
 
 /**
  *

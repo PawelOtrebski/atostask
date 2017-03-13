@@ -42,7 +42,7 @@ public class ClientRepo {
        
        for(Client client : clients.values()){
            if(client.getName().equalsIgnoreCase(name)){
-               throw new ClientExistsException(name+"exists: "+client);
+               throw new ClientExistsException(client);
            }
        }
        
@@ -72,13 +72,25 @@ public class ClientRepo {
            
        }
        
-       if(client==null) throw new ClientNotFoundException(name+" not found");
+       if(client==null) throw new ClientNotFoundException(name);
        
        return client;
    }
+  
    
    public void update(Long id, Client client) throws ClientNotFoundException{
-       if(!clients.containsKey(id)) throw new ClientNotFoundException("Client not found");
+       if(!clients.containsKey(id)) throw new ClientNotFoundException(id);
        this.clients.replace(id, client);
+   }
+   
+   public static void main(String[]args){
+       ClientRepo r = new ClientRepo();
+       
+       try{
+           r.create("pawel");
+           r.findByName("john");
+       }catch(Exception e){
+           System.out.println(e.getMessage());
+       }
    }
 }

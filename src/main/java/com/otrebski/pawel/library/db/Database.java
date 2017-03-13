@@ -221,7 +221,8 @@ public class Database {
                 System.out.println(book);
             }
             
-        }catch(AuthorNotFoundException | NullPointerException e){
+        }catch(BookNotFoundException | NullPointerException | 
+                AuthorNotFoundException e){
             System.out.println(e.getMessage());
         }
     }
@@ -248,7 +249,8 @@ public class Database {
                 System.out.println(book);
             }
             
-        }catch(AuthorNotFoundException | NullPointerException e){
+        }catch(AuthorNotFoundException | NullPointerException |
+                BookNotFoundException e){
             System.out.println(e.getMessage());
         }
     }
@@ -280,6 +282,7 @@ public class Database {
     }
     
     public static void main(String args[]){
-        
+        Database db = new Database();
+        db.addNewBook("one", "pawel otrebski", 2001);
     }
 }
