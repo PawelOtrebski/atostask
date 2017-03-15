@@ -21,22 +21,6 @@ public class AuthorRepoTest {
     
     public AuthorRepoTest() {
     }
-    
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
-    @Before
-    public void setUp() {
-    }
-    
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of generateId method, of class AuthorRepo.
@@ -45,11 +29,17 @@ public class AuthorRepoTest {
     public void testGenerateId() {
         System.out.println("generateId");
         AuthorRepo instance = new AuthorRepo();
-        Long expResult = null;
+        Long expResult = 1L;
         Long result = instance.generateId();
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        Long nextExpResult = 2L;
+        Long nextResult = instance.generateId();
+        assertEquals(nextResult,nextExpResult);
+       
+        
+        assertEquals(result,new Long(nextResult-1L));
+        
     }
 
     /**
@@ -58,28 +48,38 @@ public class AuthorRepoTest {
     @Test
     public void testCreate() throws Exception {
         System.out.println("create");
-        String name = "";
+        String name = "pawel";
         AuthorRepo instance = new AuthorRepo();
-        Author expResult = null;
+        Author expResult = new Author();
+        expResult.setName(name);
+        
         Author result = instance.create(name);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
+        String secondName = "krzys";
+        Author second = new Author();
+        second.setName(secondName);
+        
+        Author resultTwo = instance.create(secondName);
+       
+        assertNotEquals(result.getId(),second.getId());
+        
     }
-
+    
     /**
      * Test of findOrCreate method, of class AuthorRepo.
-     */
+    */
     @Test
-    public void testFindOrCreate() {
+    public void testFindOrCreate() throws Exception{
         System.out.println("findOrCreate");
-        String name = "";
+        String name = "pawel";
         AuthorRepo instance = new AuthorRepo();
-        Author expResult = null;
+        Author expResult = instance.create(name);
+        
         Author result = instance.findOrCreate(name);
         assertEquals(expResult, result);
         // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult.getId(),result.getId());
     }
 
     /**
@@ -88,25 +88,12 @@ public class AuthorRepoTest {
     @Test
     public void testFind() throws Exception {
         System.out.println("find");
-        String name = "";
+        String name = "pawel";
         AuthorRepo instance = new AuthorRepo();
-        Author expResult = null;
+        Author expResult = instance.create(name);
         Author result = instance.find(name);
         assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        
     }
 
-    /**
-     * Test of main method, of class AuthorRepo.
-     */
-    @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        AuthorRepo.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
 }
