@@ -17,6 +17,7 @@ public class ClientExistsException extends Exception {
     
     public ClientExistsException(String message){
         super(message);
+        this.message = String.format("Client with name: %s exists", message);
     }
     
     public ClientExistsException(Client client){

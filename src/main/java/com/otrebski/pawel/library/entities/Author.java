@@ -32,19 +32,12 @@ public class Author extends Person implements EntityInterface {
     
     @Override
     public boolean equals(Object o){
-        
+        if(o==null) return false;
         Author author = (Author)o;
-        try{
-            if(author.getName().equals(this.name)){
-                if(author.getId().equals(this.id))
-                    return true;
-                else if(author.getId()==null && this.id==null)
-                    return true;
-                else 
-                    return true;
-            }
-            else return false;
-        }catch(Exception e){
+        
+        if(this.getName().equals(author.getName())){
+            return true;
+        }else{
             return false;
         }
         
@@ -53,21 +46,6 @@ public class Author extends Person implements EntityInterface {
     
     public static void main(String[] args){
         
-        Author one = new Author();
-        one.setName("pawel otrebski");
-        one.setId(1L);
-        Author two = new Author();
-        two.setName("krzys otrebski");
-        two.setId(2L);
-        
-        HashSet<Author> authors = new HashSet<>();
-        authors.add(one);
-        authors.add(two);
-        
-        for(Author author : authors){
-            System.out.println(author);
-        }
-        System.out.println(one.equals(one));
         
     }
     

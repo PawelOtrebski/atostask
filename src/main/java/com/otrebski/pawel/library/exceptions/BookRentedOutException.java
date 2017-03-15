@@ -25,4 +25,9 @@ public class BookRentedOutException extends Exception{
         this.message = String.format(format, book.getId(),book.getTitle(),
                 book.getClient().getName(),book.getClient().getId());
     }
+    
+    @Override
+    public String getMessage(){
+        return this.message;
+    }
 }

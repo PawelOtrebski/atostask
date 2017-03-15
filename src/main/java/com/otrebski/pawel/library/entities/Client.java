@@ -47,6 +47,12 @@ public class Client extends Person implements EntityInterface {
         return this.rented;
     }
     
+    @Override
+    public boolean equals(Object o){
+        Client c = (Client)o;
+        return c.getName().equals(this.getName());
+    }
+    
     public static void main(String[] args){
         Client c = new Client("pawel otrebski");
         System.out.println(c);

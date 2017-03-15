@@ -10,7 +10,6 @@ import com.otrebski.pawel.library.exceptions.ClientExistsException;
 import com.otrebski.pawel.library.exceptions.ClientNotFoundException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *

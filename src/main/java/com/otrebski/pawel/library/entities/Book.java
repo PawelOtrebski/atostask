@@ -127,7 +127,10 @@ public class Book implements EntityInterface {
     }
 
     public boolean equals(Object o){
-        return false;
+        Book b = (Book)o;
+        return this.title.equals(b.getTitle())&&this.getYear().equals(b.getYear())
+                &&this.getAuthors().equals(b.getAuthors());
     }
+   
    
 }
