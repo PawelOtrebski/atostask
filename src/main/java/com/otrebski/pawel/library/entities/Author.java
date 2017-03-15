@@ -9,6 +9,7 @@ import com.otrebski.pawel.library.interfaces.EntityInterface;
 import com.otrebski.pawel.library.interfaces.Person;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 
 /**
  *
@@ -34,7 +35,14 @@ public class Author extends Person implements EntityInterface {
         
         Author author = (Author)o;
         try{
-            if(author.getName().equals(this.name)) return true;
+            if(author.getName().equals(this.name)){
+                if(author.getId().equals(this.id))
+                    return true;
+                else if(author.getId()==null && this.id==null)
+                    return true;
+                else 
+                    return true;
+            }
             else return false;
         }catch(Exception e){
             return false;
@@ -44,16 +52,23 @@ public class Author extends Person implements EntityInterface {
     }
     
     public static void main(String[] args){
-        HashSet<Author> hs = new HashSet<>();
+        
         Author one = new Author();
         one.setName("pawel otrebski");
+        one.setId(1L);
         Author two = new Author();
         two.setName("krzys otrebski");
+        two.setId(2L);
         
-        hs.add(one);
-        hs.add(two);
+        HashSet<Author> authors = new HashSet<>();
+        authors.add(one);
+        authors.add(two);
         
-        System.out.println(hs.contains(two));
+        for(Author author : authors){
+            System.out.println(author);
+        }
+        System.out.println(one.equals(one));
+        
     }
     
 }

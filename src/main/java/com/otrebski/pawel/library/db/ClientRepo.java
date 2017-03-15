@@ -8,7 +8,9 @@ package com.otrebski.pawel.library.db;
 import com.otrebski.pawel.library.entities.Client;
 import com.otrebski.pawel.library.exceptions.ClientExistsException;
 import com.otrebski.pawel.library.exceptions.ClientNotFoundException;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -20,7 +22,7 @@ import java.util.HashMap;
 */
 public class ClientRepo {
     private long numberCreated;
-    private HashMap<Long,Client> clients;
+    private HashMap<String,Client> clients;
     
     
     public ClientRepo(){
@@ -40,18 +42,17 @@ public class ClientRepo {
    public Client create(String name) 
            throws ClientExistsException,NullPointerException{
        
-       for(Client client : clients.values()){
-           if(client.getName().equalsIgnoreCase(name)){
-               throw new ClientExistsException(client);
-           }
-       }
+       if(name== null) throw new NullPointerException("name cannot be null");
        
        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
+       
+       if(clients.containsKey(name)) throw new ClientExistsException(name);
+       
        Client client = new Client();
        client.setName(name);
        client.setId(this.generateId());
        
-       clients.put(client.getId(), client);
+       clients.put(name, client);
        return client;
    }
    
@@ -61,26 +62,29 @@ public class ClientRepo {
    public Client findByName(String name) throws NullPointerException,
            ClientNotFoundException{
        
+       if(name==null) throw new NullPointerException("name cannot be null");
+       
        Client client = null;
        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
-       for(Client c : clients.values()){
-           
-           if(c.getName().equals(name)){
-               client = c;
-               break;
-           }
-           
-       }
        
-       if(client==null) throw new ClientNotFoundException(name);
+       if(!clients.containsKey(name)) throw new ClientNotFoundException(name);
        
-       return client;
+       
+       return clients.get(name);
+   }
+   
+   public Collection<Client> find() throws NullPointerException{
+       
+       if(this.clients.isEmpty()) throw new NullPointerException("No clients");
+       
+       return this.clients.values();
+       
    }
   
    
-   public void update(Long id, Client client) throws ClientNotFoundException{
-       if(!clients.containsKey(id)) throw new ClientNotFoundException(id);
-       this.clients.replace(id, client);
+   public void update(String name, Client client) throws ClientNotFoundException{
+       if(!clients.containsKey(name)) throw new ClientNotFoundException(name);
+       this.clients.replace(name, client);
    }
    
    public static void main(String[]args){

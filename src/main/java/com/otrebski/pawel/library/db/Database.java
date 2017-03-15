@@ -108,7 +108,7 @@ public class Database {
             client.addToRented(book);
             
             this.bookRepository.update(bookId, book);
-            this.clientsRepository.update(client.getId(), client);
+            this.clientsRepository.update(name, client);
             
         }catch(BookNotFoundException |ClientNotFoundException |
                 BookRentedOutException e){
@@ -151,7 +151,7 @@ public class Database {
             
             
             this.bookRepository.update(id, book);
-            this.clientsRepository.update(client.getId(), client);
+            this.clientsRepository.update(name, client);
             
         }catch(BookNotFoundException | BookRentedOutException | ClientNotFoundException | NullPointerException e){
             System.out.println(e.getMessage());
@@ -288,6 +288,23 @@ public class Database {
             }
             
         }catch(BookNotFoundException | NullPointerException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void listAllClients(){
+        try{
+            Collection<Client> clients = this.clientsRepository.find();
+            
+            for(Client client : clients){
+                System.out.println(client);
+                System.out.println("Titles rented:");
+                for(Book book : client.getRented().values()){
+                    System.out.println(book.getTitle());
+                }
+            }
+            
+        }catch(NullPointerException e){
             System.out.println(e.getMessage());
         }
     }

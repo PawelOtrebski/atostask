@@ -20,7 +20,7 @@ public class AuthorRepo {
         Keep track of the number of authors created, used for ID generation
     */
     private long numberCreated;
-    private HashMap<Long,Author> authors;
+    private HashMap<String,Author> authors;
     
     public AuthorRepo(){
         this.authors = new HashMap<>();
@@ -48,20 +48,15 @@ public class AuthorRepo {
         
         name = name.replaceAll("\\s+", " ").trim().toLowerCase();
         
-        for(Author author : authors.values()){
-            
-            if(author.getName().equalsIgnoreCase(name)){
-                throw new AuthorExistsException(author);
-            }
-            
-        }
+        if(authors.containsKey(name)) throw new AuthorExistsException(name);
+        
         
         
         Author author = new Author();
         author.setName(name);
         author.setId(this.generateId());
         
-        this.authors.put(author.getId(), author);
+        this.authors.put(name, author);
         return author;
     }
     
@@ -75,18 +70,15 @@ public class AuthorRepo {
         Author author = null;
         name = name.replaceAll("\\s+", " ").trim().toLowerCase();
        
-        for(Author a : authors.values()){
-            if(a.getName().equals(name)){
-                author = a;
-                break;
-            }
-        }
+        if(name == null) throw new NullPointerException("name cannot be null");
         
-        if(author==null){
+        if(authors.containsKey(name)){
+            author = authors.get(name);
+        }else{
             author = new Author();
             author.setName(name);
             author.setId(this.generateId());
-            this.authors.put(author.getId(), author);
+            this.authors.put(name, author);
         }
         
         return author;
@@ -98,19 +90,14 @@ public class AuthorRepo {
     public Author find(String name)throws NullPointerException,
             AuthorNotFoundException{
         
+        if(name==null) throw new NullPointerException("name cannot be null");
+        
         Author author = null;
         name = name.replaceAll("\\s+", " ").trim().toLowerCase();
         
-        for(Author a : authors.values()){
-            if(a.getName().equals(name)){
-                author = a;
-                break;
-            }
-        }
+        if(!authors.containsKey(name)) throw new AuthorNotFoundException(name);
         
-        if(author == null) throw new AuthorNotFoundException(name);
-        
-        return author;
+        return authors.get(name);
     }
     
     public static void main(String[]args){

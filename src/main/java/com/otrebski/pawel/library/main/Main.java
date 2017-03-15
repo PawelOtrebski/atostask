@@ -26,5 +26,6 @@ public class Main {
        db.lendBook(2L, "john wayne");
        
        db.listAllBooks();
+       db.listAllClients();
     }
 }

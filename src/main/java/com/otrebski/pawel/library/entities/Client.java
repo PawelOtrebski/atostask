@@ -43,6 +43,10 @@ public class Client extends Person implements EntityInterface {
         this.rented.remove(book.getId(), book);
     }
     
+    public HashMap<Long,Book> getRented(){
+        return this.rented;
+    }
+    
     public static void main(String[] args){
         Client c = new Client("pawel otrebski");
         System.out.println(c);
