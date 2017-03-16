@@ -72,6 +72,14 @@ public class BooksRepoTest {
         
         assertEquals(result,book);
         
+        System.out.println("update exception handler");
+        
+        try{
+            instance.update(11L, book);
+            fail("update exception handler not working");
+        }catch(Exception e){
+        }
+        
         
     }
 
@@ -131,6 +139,14 @@ public class BooksRepoTest {
         Book result = instance.findById(book.getId());
         assertEquals(book, result);
         
+        System.out.println("findById exception handler");
+        try{
+            instance.findById(10L);
+            fail("findById exception handler not working");
+        }catch(Exception e){
+            
+        }
+        
     }
 
     /**
@@ -156,6 +172,13 @@ public class BooksRepoTest {
         
         List<Book> books = instance.findByName("test_title");
         assert(books.contains(book));
+        System.out.println("findByName Exception handler");
+        try{
+            instance.findByName("unavailable");
+            fail("Exception handler for findbyname not working");
+        }catch(Exception e){
+            
+        }
         
     }
 
@@ -170,6 +193,13 @@ public class BooksRepoTest {
         
         BooksRepo instance = new BooksRepo();
         AuthorRepo authorInstance = new AuthorRepo();
+        System.out.println("findByAuthor exception handler");
+        try{
+            instance.findByAuthor(author);
+            fail("Error occurred");
+        }catch(Exception e){
+            
+        }
         
         author.setId("test_author");
         author.setName("test_author");
@@ -196,6 +226,15 @@ public class BooksRepoTest {
         Author author = AuthorFactory.produceAuthor();
         Book book = BookFactory.produceBook();
         
+        System.out.println("find all exception handler");
+        
+        try{
+            Collection<Book> books = instance.findAll();
+            fail("Collection should be empty");
+        }catch(Exception e){
+            
+        }
+        
         author.setId("test_author");
         author.setName("test_author");
         
@@ -213,31 +252,5 @@ public class BooksRepoTest {
 
     
 
-    /**
-     * Test of getAllStats method, of class BooksRepo.
-     *
-    @Test
-    public void testGetAllStats() {
-        System.out.println("getAllStats");
-        BooksRepo instance = new BooksRepo();
-        String expResult = "";
-        String result = instance.getAllStats();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of main method, of class BooksRepo.
-     *
-    @Test
-    public void testMain() {
-        System.out.println("main");
-        String[] args = null;
-        BooksRepo.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-*/
+    
 }
