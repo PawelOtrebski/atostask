@@ -64,18 +64,16 @@ public class AuthorRepo {
         Author author = null;
         if(name == null) throw new NullPointerException("name cannot be null");
         
-        if(this.authors.containsKey(name))
-            author = this.authors.get(name);
-        
-        
-        if(author == null){
+        try{
             author = AuthorFactory.produceAuthor();
-            
-            author.setName(name);
             author.setId(name);
-            author = authors.put(name, author);
+            author.setName(name);
+            
+            author = this.create(author);
+        }catch(AuthorExistsException e){
+            author = this.find(name);
         }
-        
+    
         return author;
     }
     /*
