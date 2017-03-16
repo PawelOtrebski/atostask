@@ -108,7 +108,7 @@ public class BooksRepo {
         
         if(book.getCurrentStatus().equals(Status.OUT)) throw new BookRentedOutException(book);
         
-        this.books.remove(book.getId());
+        this.books.remove(book.getId(),book);
         
         
     }
@@ -167,6 +167,13 @@ public class BooksRepo {
     public Collection<Book> findAll(){
         return this.books.values();
     }
+    
+    public void setBookStatus(Long bookId,Status status) throws Exception{
+        if(!books.containsKey(bookId)) throw new BookNotFoundException(bookId);
+        Book b = books.get(bookId);
+        if(b.getClient()!=null) throw new BookRentedOutException(b);
+        b.setCurrentStatus(status);
+    }
    
     public String getAllStats(){
         int numberOfBooks = this.books.size();
@@ -187,6 +194,7 @@ public class BooksRepo {
     
     public static void main(String[]args){
         
+
     }
 
    
