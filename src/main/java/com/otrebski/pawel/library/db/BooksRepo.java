@@ -61,20 +61,10 @@ public class BooksRepo {
         many books can be written by one author, but only author can write a given
         book
     */
-    public Book create(String title, Author author, Integer year) 
+    public Book create(Book book) 
         throws NullPointerException{
         
-        if(author==null||year == null||title==null)
-            throw new NullPointerException("Invalid book details");
-        
-        title = title.replaceAll("\\s+", " ").trim().toLowerCase();
-        
-        Book book = new Book();
-        book.setId(this.generateId());
-        book.setTitle(title);
-        book.setYear(year);
-        book.setAuthor(author);
-        book.setCurrentStatus(Status.IN);
+        if(book == null) throw new NullPointerException("book cannot be null");
         
         books.put(book.getId(), book);
         return book;
@@ -86,21 +76,21 @@ public class BooksRepo {
         Throws an exception if the book is not in the repository
     */
     
-    public void update(Long bookId, Book book) throws BookNotFoundException{
+    public Book update(Long bookId, Book book) throws BookNotFoundException{
         
         if(!books.containsKey(bookId)) throw new BookNotFoundException(bookId);
         
         
         this.books.replace(bookId, book);
         
-        System.out.println(bookId+" updated");
+        return book;
     }
     
     /*
         delete a book from the repository provided it is not rented out and that
         the book exists
     */
-    public void delete(Long bookId) throws BookNotFoundException,
+    public Book delete(Long bookId) throws BookNotFoundException,
             BookRentedOutException{
         if(!this.books.containsKey(bookId)) throw new BookNotFoundException(bookId);
         
@@ -108,7 +98,7 @@ public class BooksRepo {
         
         if(book.getCurrentStatus().equals(Status.OUT)) throw new BookRentedOutException(book);
         
-        this.books.remove(book.getId(),book);
+        return this.books.remove(book.getId());
         
         
     }
@@ -127,8 +117,6 @@ public class BooksRepo {
     */
     public List<Book> findByName(String name) throws BookNotFoundException,
             NullPointerException{
-        
-        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
         
         ArrayList<Book> list = new ArrayList<>();
         
@@ -164,7 +152,8 @@ public class BooksRepo {
         Return all books from the repository as a Collection
     */
     
-    public Collection<Book> findAll(){
+    public Collection<Book> findAll() throws NullPointerException{
+        if(books.isEmpty()) throw new NullPointerException("Library Empty");
         return this.books.values();
     }
     

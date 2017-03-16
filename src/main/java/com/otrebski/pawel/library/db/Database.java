@@ -10,6 +10,9 @@ import com.otrebski.pawel.library.exceptions.BookNotFoundException;
 import com.otrebski.pawel.library.exceptions.BookRentedOutException;
 import com.otrebski.pawel.library.exceptions.ClientExistsException;
 import com.otrebski.pawel.library.exceptions.ClientNotFoundException;
+import com.otrebski.pawel.library.factories.AuthorFactory;
+import com.otrebski.pawel.library.factories.BookFactory;
+import com.otrebski.pawel.library.factories.ClientFactory;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -42,6 +45,8 @@ public class Database {
     private ClientRepo clientsRepository;
     private AuthorRepo authorsRepository;
     
+    private ClientFactory clientFactory;
+    
     private Database(){
         
         this.bookRepository = new BooksRepo();
@@ -65,9 +70,17 @@ public class Database {
         or created and then added to the books author field.
     */
     
-    public void addNewBook(String title, String author, Integer year){
-        Author a = this.getAuthorsRepository().findOrCreate(author);
-        this.getBookRepository().create(title, a, year);
+    public Book addNewBook(String title, String author, Integer year) throws Exception{
+            Book b = BookFactory.produceBook();
+            Author a = this.authorsRepository.findOrCreate(author);
+            b.setAuthor(a);
+            b.setTitle(title);
+            b.setYear(year);
+            
+            b = this.bookRepository.create(b);
+            
+            return b;
+            
     }
     
     /*
@@ -76,12 +89,11 @@ public class Database {
         is a null value
     */
     
-    public void addNewClient(String name){
-        try{
-            Client c = this.getClientsRepository().create(name);
-        }catch(NullPointerException | ClientExistsException ne){
-            System.out.println(ne.getMessage());
-        }
+    public Client addNewClient(String name) throws Exception {
+        Client c = ClientFactory.produceClient();
+        c.setName(name);
+        this.clientsRepository.create(c);
+        return c;
         
     }
     
@@ -92,10 +104,10 @@ public class Database {
         if the client with a given name does not exist
     */
     
-    public void lendBook(Long bookId,String name){
-        try{
-            Book book = this.getBookRepository().findById(bookId);
-            Client client = this.getClientsRepository().findByName(name);
+    public Book lendBook(Long bookId,String name) throws Exception{
+        
+            Book book = this.bookRepository.findById(bookId);
+            Client client = this.clientsRepository.findByName(name);
             
             if(book.getCurrentStatus().equals(Status.OUT))
                 throw new BookRentedOutException(book);
@@ -105,27 +117,19 @@ public class Database {
             
             client.addToRented(book);
             
-            this.getBookRepository().update(bookId, book);
-            this.getClientsRepository().update(name, client);
+            this.bookRepository.update(bookId, book);
+            this.clientsRepository.update(name, client);
             
-        }catch(BookNotFoundException |ClientNotFoundException |
-                BookRentedOutException e){
-            System.out.println(e.getMessage());
-        }
+            return book;
     }
     
     /*
         Deletes the book from the database provided that the book exists
         and that some client has not rented the book out
     */
-    public void deleteBook(Long bookId){
-        try{
-            
-            this.getBookRepository().delete(bookId);
-            
-        }catch(BookNotFoundException | BookRentedOutException e){
-            System.out.println(e.getMessage());
-        }
+    public Book deleteBook(Long bookId) throws Exception{
+        Book book = this.bookRepository.findById(bookId);
+        return this.bookRepository.delete(bookId);
     }
     
     /*
@@ -134,12 +138,12 @@ public class Database {
         and cannot return a book that doesn't exist
     */
     
-    public void returnBook(Long id, String name){
-        try{
+    public Book returnBook(Long id, String name) throws Exception{
+       
             
-            Book book = this.getBookRepository().findById(id);
+            Book book = this.bookRepository.findById(id);
            
-            Client client = this.getClientsRepository().findByName(name);
+            Client client = this.clientsRepository.findByName(name);
      
             if(!name.equals(book.getClient().getName()))
                 throw new BookRentedOutException(book);
@@ -148,12 +152,11 @@ public class Database {
             book.setCurrentStatus(Status.IN);
             book.setClient(null);
             
-            this.getBookRepository().update(id, book);
-            this.getClientsRepository().update(name, client);
+            this.bookRepository.update(id, book);
+            this.clientsRepository.update(name, client);
             
-        }catch(BookNotFoundException | BookRentedOutException | ClientNotFoundException | NullPointerException e){
-            System.out.println(e.getMessage());
-        }
+            return book;
+        
     }
     
     /*
@@ -164,29 +167,24 @@ public class Database {
         well as sundry information such as books rented out and books available
     */
    
-    public void listAllBooks(){
-        Collection<Book> books = this.getBookRepository().findAll();
+    public Collection<Book> listAllBooks() throws Exception{
+        Collection<Book> books = this.bookRepository.findAll();
         
-        for(Book book : books){
-            System.out.println(book+"\n");
-        }
-        
-        System.out.println("\n\n"+this.getBookRepository().getAllStats());
+        return books;
     }
-    
+   
     /*
         List a given book by id. Information includes:
         title, author, year, availability and client renting (if OUT)
     */
     
-    public void listBookById(Long bookId){
-        try{
-            Book book = this.getBookRepository().findById(bookId);
+    public Book listBookById(Long bookId) throws Exception{
+            Book book = this.bookRepository.findById(bookId);
             
             System.out.println(book);
-        }catch(BookNotFoundException e){
-            System.out.println(e.getMessage());
-        }
+            
+            return book;
+            
     }
     
     /*
@@ -194,29 +192,20 @@ public class Database {
         authors and different years of publishing
     */
     
-    public void listBooksByTitle(String title){
-        try{
+    public List<Book> listBooksByTitle(String title) throws Exception{   
+        List<Book> books = this.bookRepository.findByName(title);
             
-            List<Book> books = this.getBookRepository().findByName(title);
-            
-            for(Book book : books){
-                System.out.println(book+"\n");
-            }
-            
-        }catch(BookNotFoundException e){
-            System.out.println(e.getMessage());
-        }
+        return books;
     }
     
     /*
         List books by author and year of publishing. 
     */
     
-    public void listBooksByAuthorYear(String name, Integer year){
-        try{
-            
-            Author author = this.getAuthorsRepository().find(name);
-            List<Book> list = this.getBookRepository().findByAuthor(author);
+    public List<Book> listBooksByAuthorYear(String name, Integer year) throws Exception{
+        
+            Author author = this.authorsRepository.findOrCreate(name);
+            List<Book> list = this.bookRepository.findByAuthor(author);
             
             List<Book> titles = new ArrayList<>();
             
@@ -226,25 +215,19 @@ public class Database {
                 }
             }
             
-            for(Book book : titles){
-                System.out.println(book);
-            }
             
-        }catch(BookNotFoundException | NullPointerException | 
-                AuthorNotFoundException e){
-            System.out.println(e.getMessage());
-        }
+            return list;
     }
     
     /*
         List books by author and title
     */
     
-    public void listBooksByAuthorTitle(String name,String title){
-        try{
+    public List<Book> listBooksByAuthorTitle(String name,String title) throws Exception{
+       
             
-            Author author = this.getAuthorsRepository().find(name);
-            List<Book> list = this.getBookRepository().findByAuthor(author);
+            Author author = this.authorsRepository.find(name);
+            List<Book> list = this.bookRepository.findByAuthor(author);
             
             List<Book> titles = new ArrayList<>();
             
@@ -254,97 +237,65 @@ public class Database {
                 }
             }
             
-            for(Book book : titles){
-                System.out.println(book);
-            }
-            
-        }catch(AuthorNotFoundException | NullPointerException |
-                BookNotFoundException e){
-            System.out.println(e.getMessage());
-        }
+        
+            return titles;
+    
     }
     
     /*
         List books by title and year of publishing
     */
     
-    public void listBooksByTitleYear(String title, int year){
-        try{
+    public List<Book> listBooksByTitleYear(String title, int year) throws Exception{
+        
             
-            List<Book> list = this.getBookRepository().findByName(title);
+        List<Book> list = this.bookRepository.findByName(title);
             
-            List<Book> titles = new ArrayList<>();
-            
-            for(Book book : list){
-                if(book.getYear().equals(year)){
-                    titles.add(book);
-                }
-            }
-            
-            for(Book book : titles){
-                System.out.println(book);
-            }
-            
-        }catch(BookNotFoundException | NullPointerException e){
-            System.out.println(e.getMessage());
-        }
+        return list;
     }
     
-    public void listAllClients(){
-        try{
-            Collection<Client> clients = this.getClientsRepository().find();
+    public Collection<Client> listAllClients() throws Exception{
+       
+        Collection<Client> clients = this.clientsRepository.find();
             
-            for(Client client : clients){
-                System.out.println(client);
-                System.out.println("Titles rented:");
-                for(Book book : client.getRented().values()){
-                    System.out.println(book.getTitle());
-                }
-            }
             
-        }catch(NullPointerException e){
-            System.out.println(e.getMessage());
-        }
+        return clients; 
     }
     
-    public void listClientByName(String name){
-        try{
+    public Client listClientByName(String name) throws Exception{
+        
             
-            Client client = this.getClientsRepository().findByName(name);
+        Client client = this.clientsRepository.findByName(name);
             
-            System.out.println(client);
-            System.out.println("Titles rented:");
-            for(Book book : client.getRented().values()){
-                System.out.println(book.getTitle());
-            }
             
-        }catch(ClientNotFoundException | NullPointerException e){
-            System.out.println(e.getMessage());
-        }
-    }
-
-    /**
-     * @return the bookRepository
-     */
-    public BooksRepo getBookRepository() {
-        return bookRepository;
-    }
-
-    /**
-     * @return the clientsRepository
-     */
-    public ClientRepo getClientsRepository() {
-        return clientsRepository;
-    }
-
-    /**
-     * @return the authorsRepository
-     */
-    public AuthorRepo getAuthorsRepository() {
-        return authorsRepository;
-    }
-    
-    public static void main(String args[]){
+        return client;  
         
     }
+    
+    public static void main(String[]args) throws Exception{
+        Database db = Database.getInstance();
+        
+        db.addNewBook("test", "pawel", 2001);
+        db.addNewBook("test2", "pawel", 2002);
+        db.addNewBook("another test", "krzys", 2009);
+        db.addNewBook("test three", "wojciech", 2001);
+        
+        db.addNewClient("giles smith");
+        db.addNewClient("peter green");
+        db.addNewClient("moses mary");
+        db.addNewClient("justin timberman");
+        
+        db.lendBook(1L, "peter green");
+        db.lendBook(2L, "peter green");
+        db.lendBook(3L, "justin timberman");
+        
+        db.returnBook(3L, "justin timberman");
+        
+        try{
+            db.lendBook(1L, "moses mary");
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+  
 }

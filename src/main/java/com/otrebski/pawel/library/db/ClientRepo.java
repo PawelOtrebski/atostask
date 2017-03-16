@@ -31,29 +31,25 @@ public class ClientRepo {
     /*
         Generate an ID
     */
-    private Long generateId(){
+    public Long generateId(){
         return ++this.numberCreated;
     }
     /*
         Create a new client with a given name or throw an exception if the 
         client exists or if the nameo the given client is null
     */
-   public Client create(String name) 
+   public Client create(Client client) 
            throws ClientExistsException,NullPointerException{
+           
+       if(this.clients.containsKey(client.getName()))
+           throw new ClientExistsException(client);
        
-       if(name== null) throw new NullPointerException("name cannot be null");
+       this.clients.put(client.getName(), client);
        
-       name = name.replaceAll("\\s+", " ").trim().toLowerCase();
-       
-       if(clients.containsKey(name)) throw new ClientExistsException(name);
-       
-       Client client = new Client();
-       client.setName(name);
-       client.setId(this.generateId());
-       
-       clients.put(name, client);
        return client;
    }
+   
+   
    
    /*
         Find the given client by name
@@ -62,9 +58,6 @@ public class ClientRepo {
            ClientNotFoundException{
        
        if(name==null) throw new NullPointerException("name cannot be null");
-       
-       Client client = null;
-       name = name.replaceAll("\\s+", " ").trim().toLowerCase();
        
        if(!clients.containsKey(name)) throw new ClientNotFoundException(name);
        
@@ -86,14 +79,15 @@ public class ClientRepo {
        this.clients.replace(name, client);
    }
    
-   public static void main(String[]args){
-       ClientRepo r = new ClientRepo();
-       
-       try{
-           r.create("pawel");
-           r.findByName("john");
-       }catch(Exception e){
-           System.out.println(e.getMessage());
+   public Client delete(Long id) throws Exception{
+       Client client= this.clients.remove(id);
+       if(client==null){
+           throw new ClientNotFoundException(id);
        }
+       return client;
+   }
+   
+   public static void main(String[]args){
+    
    }
 }

@@ -4,6 +4,7 @@ package com.otrebski.pawel.library.db;
 import com.otrebski.pawel.library.entities.Author;
 import com.otrebski.pawel.library.exceptions.AuthorExistsException;
 import com.otrebski.pawel.library.exceptions.AuthorNotFoundException;
+import com.otrebski.pawel.library.factories.AuthorFactory;
 import java.util.HashMap;
 
 /**
@@ -43,20 +44,11 @@ public class AuthorRepo {
         exception is thrown
     */
     
-    public Author create(String name)
+    public Author create(Author author)
             throws AuthorExistsException,NullPointerException{
         
-        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
         
-        if(authors.containsKey(name)) throw new AuthorExistsException(name);
-        
-        
-        
-        Author author = new Author();
-        author.setName(name);
-        author.setId(this.generateId());
-        
-        this.authors.put(name, author);
+        if(authors.containsKey(author.getName())) throw new AuthorExistsException(author.getId());
         return author;
     }
     
@@ -65,20 +57,19 @@ public class AuthorRepo {
         finds an author with a given name if such an author exists or 
         creates a new author 
     */
-    public Author findOrCreate(String name) throws NullPointerException{
+    public Author findOrCreate(String name) throws Exception{
+        
         
         Author author = null;
-        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
-       
         if(name == null) throw new NullPointerException("name cannot be null");
         
-        if(authors.containsKey(name)){
-            author = authors.get(name);
-        }else{
-            author = new Author();
+        author = this.authors.get(name);
+        
+        
+        if(author == null){
+            author = AuthorFactory.produceAuthor();
             author.setName(name);
-            author.setId(this.generateId());
-            this.authors.put(name, author);
+            authors.put(name, author);
         }
         
         return author;
@@ -93,11 +84,23 @@ public class AuthorRepo {
         if(name==null) throw new NullPointerException("name cannot be null");
         
         Author author = null;
-        name = name.replaceAll("\\s+", " ").trim().toLowerCase();
         
         if(!authors.containsKey(name)) throw new AuthorNotFoundException(name);
         
         return authors.get(name);
+    }
+    
+    public Author updated(String authorId,Author author) throws Exception{
+        if(!this.authors.containsKey(author.getName()))
+            throw new AuthorExistsException(author);
+        Author persisted = this.authors.replace(author.getName(), author);
+        return persisted;
+    }
+    
+    public Author delete(String authorId) throws Exception{
+        if(!this.authors.containsKey(authorId))
+            throw new AuthorNotFoundException(authorId);
+        return this.authors.remove(authorId);
     }
     
     public static void main(String[]args){
