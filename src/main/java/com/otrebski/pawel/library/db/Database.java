@@ -92,6 +92,7 @@ public class Database {
     public Client addNewClient(String name) throws Exception {
         Client c = ClientFactory.produceClient();
         c.setName(name);
+        c.setId(name);
         this.clientsRepository.create(c);
         return c;
         
@@ -273,29 +274,7 @@ public class Database {
     }
     
     public static void main(String[]args) throws Exception{
-        Database db = Database.getInstance();
         
-        db.addNewBook("test", "pawel", 2001);
-        db.addNewBook("test2", "pawel", 2002);
-        db.addNewBook("another test", "krzys", 2009);
-        db.addNewBook("test three", "wojciech", 2001);
-        
-        db.addNewClient("giles smith");
-        db.addNewClient("peter green");
-        db.addNewClient("moses mary");
-        db.addNewClient("justin timberman");
-        
-        db.lendBook(1L, "peter green");
-        db.lendBook(2L, "peter green");
-        db.lendBook(3L, "justin timberman");
-        
-        db.returnBook(3L, "justin timberman");
-        
-        try{
-            db.lendBook(1L, "moses mary");
-        }catch(Exception e){
-            System.out.println(e.getMessage());
-        }
     }
   
 }

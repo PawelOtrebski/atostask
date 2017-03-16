@@ -21,7 +21,7 @@ public class BookRentedOutException extends Exception{
     
     public BookRentedOutException(Book book){
         super();
-        String format = "Book with id: %d, title: %s rented out to: %s (id: %d)";
+        String format = "Book with id: %d, title: %s rented out to: %s (id: %s)";
         this.message = String.format(format, book.getId(),book.getTitle(),
                 book.getClient().getName(),book.getClient().getId());
     }

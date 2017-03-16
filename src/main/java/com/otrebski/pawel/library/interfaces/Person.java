@@ -24,18 +24,18 @@ public abstract class Person {
     /**
      * @return the id
      */
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     protected String name;
-    protected Long id;
+    protected String id;
     
     public Person(){
         this.name = null;
@@ -44,6 +44,6 @@ public abstract class Person {
     
     public Person(String name){
         this.name = name;
-        this.id = null;
+        this.id = name;
     }
 }

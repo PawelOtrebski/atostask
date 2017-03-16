@@ -157,12 +157,7 @@ public class BooksRepo {
         return this.books.values();
     }
     
-    public void setBookStatus(Long bookId,Status status) throws Exception{
-        if(!books.containsKey(bookId)) throw new BookNotFoundException(bookId);
-        Book b = books.get(bookId);
-        if(b.getClient()!=null) throw new BookRentedOutException(b);
-        b.setCurrentStatus(status);
-    }
+    
    
     public String getAllStats(){
         int numberOfBooks = this.books.size();

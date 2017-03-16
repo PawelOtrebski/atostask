@@ -28,7 +28,7 @@ public class AuthorFactory {
     
     public static Author produceAuthor(){
         Author author = new Author();
-        author.setId(++numberCreated);
+        
         return author;
     }
 }

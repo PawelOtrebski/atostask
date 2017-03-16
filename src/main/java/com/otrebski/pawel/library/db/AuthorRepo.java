@@ -48,7 +48,8 @@ public class AuthorRepo {
             throws AuthorExistsException,NullPointerException{
         
         
-        if(authors.containsKey(author.getName())) throw new AuthorExistsException(author.getId());
+        if(authors.containsKey((String)author.getId())) throw new AuthorExistsException((String)author.getId());
+        this.authors.put(author.getId(), author);
         return author;
     }
     
@@ -63,13 +64,16 @@ public class AuthorRepo {
         Author author = null;
         if(name == null) throw new NullPointerException("name cannot be null");
         
-        author = this.authors.get(name);
+        if(this.authors.containsKey(name))
+            author = this.authors.get(name);
         
         
         if(author == null){
             author = AuthorFactory.produceAuthor();
+            
             author.setName(name);
-            authors.put(name, author);
+            author.setId(name);
+            author = authors.put(name, author);
         }
         
         return author;
@@ -91,9 +95,9 @@ public class AuthorRepo {
     }
     
     public Author updated(String authorId,Author author) throws Exception{
-        if(!this.authors.containsKey(author.getName()))
-            throw new AuthorExistsException(author);
-        Author persisted = this.authors.replace(author.getName(), author);
+        if(!this.authors.containsKey(authorId))
+            throw new AuthorNotFoundException(authorId);
+        Author persisted = this.authors.replace(authorId, author);
         return persisted;
     }
     

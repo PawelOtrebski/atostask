@@ -18,7 +18,7 @@ public class AuthorExistsException extends Exception {
         super(message);
     }
     
-    public AuthorExistsException(Long id){
+    public AuthorExistsException(Object id){
         super();
         String format ="Author with id: %d already exists";
         this.message = String.format(format, id);

@@ -30,7 +30,6 @@ public class ClientFactory {
     
     public static Client produceClient(){
         Client client = new Client();
-        client.setId(++numberCreated);
         
         return client;
     }
