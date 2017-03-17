@@ -14,7 +14,20 @@ be sufficient.
 2. Apache maven 3.3.9
 3. (optional) Use an IDE (I used netbeans), which simplifies the whole process
 
+
+## Compilation
+1. (Using Netbeans IDE)
+.. 1. import project into workspace
+.. 2. right-click the project "Library" in the projects menu section
+.. 3. select "run maven" from options
+.. 4. enter "clean compile package"
+.. 5. Test results will be output to console frame of IDE
+.. 6. right-click on "Library" project, select "run"(Select Main.main as main class for project)
+2. (Using the command line)
+.. 1. run mvn in command line with options "clean compile package"
+.. 2. results of tests will be output to console
+.. 3. run "javac 
 ## TODO
 1. Refactor some code, find patterns etc
-2. reimplement hashmaps for client, id search is minimal, name search more often
+2. make sure that Database.java is put into new package, this is a controller, hence MVC like architecture
 
