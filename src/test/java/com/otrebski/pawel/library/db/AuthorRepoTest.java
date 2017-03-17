@@ -62,8 +62,6 @@ public class AuthorRepoTest {
         Author result = instance.findOrCreate("test_author");
         assertEquals(expResult,result);
         
-        
-        
     }
 
     /**

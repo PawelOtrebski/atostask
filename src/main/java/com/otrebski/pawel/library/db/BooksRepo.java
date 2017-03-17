@@ -176,10 +176,25 @@ public class BooksRepo {
                 numberOfBooks,available,rented);
     }
     
-    public static void main(String[]args){
-        
-
+    public Integer getTotalBooks(){
+        return this.books.size();
     }
+    
+    public int getTotalAvailable(){
+        int count = 0;
+        for(Book b: books.values()){
+            if(b.getCurrentStatus().equals(Status.OUT)){
+                count++;
+            }
+        }
+        
+        return count;
+    }
+    
+    public int getRented(){
+        return this.getTotalAvailable()-this.getRented();
+    }
+   
 
    
     

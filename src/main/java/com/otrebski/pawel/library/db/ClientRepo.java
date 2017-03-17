@@ -79,7 +79,7 @@ public class ClientRepo {
        this.clients.replace(name, client);
    }
    
-   public Client delete(Long id) throws Exception{
+   public Client delete(String id) throws Exception{
        Client client= this.clients.remove(id);
        if(client==null){
            throw new ClientNotFoundException(id);

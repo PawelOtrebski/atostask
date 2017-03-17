@@ -15,6 +15,7 @@ import com.otrebski.pawel.library.factories.BookFactory;
 import com.otrebski.pawel.library.factories.ClientFactory;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -271,6 +272,15 @@ public class Database {
             
         return client;  
         
+    }
+    
+    public HashMap<String,Integer> getStats(){
+        HashMap<String,Integer> stats = new HashMap();
+        stats.put("total", this.bookRepository.getTotalBooks());
+        stats.put("available", this.bookRepository.getTotalAvailable());
+        stats.put("rented", this.bookRepository.getRented());
+        
+        return stats;
     }
     
     public static void main(String[]args) throws Exception{
