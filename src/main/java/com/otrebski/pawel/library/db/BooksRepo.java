@@ -159,7 +159,7 @@ public class BooksRepo {
     
     
    
-    public String getAllStats(){
+    public String getAllStats() throws NullPointerException{
         int numberOfBooks = this.books.size();
         int available = 0;
         int rented = 0;
@@ -192,7 +192,7 @@ public class BooksRepo {
     }
     
     public int getRented(){
-        return this.getTotalAvailable()-this.getRented();
+        return this.getTotalBooks()-this.getTotalAvailable();
     }
    
 

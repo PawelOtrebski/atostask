@@ -9,6 +9,7 @@ import com.otrebski.pawel.library.db.Database;
 import com.otrebski.pawel.library.entities.Book;
 import com.otrebski.pawel.library.entities.Client;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -141,6 +142,18 @@ public class API {
         try{
             Book book = db.deleteBook(bookId);
             System.out.println(book+"\n: deleted");
+        }catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
+    public void getLibraryStatistics(){
+        try{
+            HashMap<String,Integer> stats = db.getStats();
+            
+            for(String key: stats.keySet()){
+                System.out.println(key+":"+stats.get(key));
+            }
         }catch(Exception e){
             System.out.println(e.getMessage());
         }

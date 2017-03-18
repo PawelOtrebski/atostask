@@ -48,6 +48,8 @@ public class Main {
        //delete book
        api.removeBook(1L);
        api.removeBook(3L);
+       
+       api.getLibraryStatistics();
     }
 
 }
