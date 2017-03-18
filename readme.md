@@ -27,6 +27,9 @@ be sufficient.
    1. change directories to project Directory named "Library"
    2. run "mvn clean compile package", project should run tests and build
    3. run "java -cp target/Library-1.0-SNAPSHOT.jar com.otrebski.pawel.main.Main" to view test sessions results
+
+## changing test session
+To change the test session, modify the Main.java file, listing API commands to use. API will output results of actions to Standard Output
 ## TODO
 1. Refactor some code, find patterns etc
 2. make sure that Database.java is put into new package, this is a controller, hence MVC like architecture
